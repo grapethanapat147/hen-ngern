@@ -1,11 +1,11 @@
-# รู้เงิน (roongern) — Starter kit
+# เห็นเงิน (henngern)
 
 ชุดเอกสารสำหรับเริ่มโปรเจกต์ใหม่ใน Claude Code · ยังไม่มีโค้ด (Claude Code จะ scaffold ในเฟส P0)
 
 ## วิธีใช้
 
-1. แตก zip ไปไว้ในโฟลเดอร์ว่าง เช่น `~/Projects/roongern`
-2. `cd ~/Projects/roongern && git init && git add . && git commit -m "docs: starter kit"`
+1. แตก zip ไปไว้ในโฟลเดอร์ว่าง เช่น `~/Projects/hen-ngern`
+2. `cd ~/Projects/hen-ngern && git init && git add . && git commit -m "docs: starter kit"`
 3. เปิด `claude` ในโฟลเดอร์นั้น
 4. วาง prompt "เริ่มโปรเจกต์" จาก `docs/kickoff-prompts.md`
 5. ทำทีละเฟส รอรายงานก่อนสั่งเฟสถัดไป

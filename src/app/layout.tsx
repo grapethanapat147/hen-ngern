@@ -15,7 +15,7 @@ const notoThai = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: "รู้เงิน",
+  title: "เห็นเงิน",
   description: "เห็นเงินเข้า เงินออก และวันตัดในก้อนเดียว",
 };
 

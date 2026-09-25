@@ -1,4 +1,4 @@
-# รู้เงิน (roongern) — Project instructions for Claude Code
+# เห็นเงิน (henngern) — Project instructions for Claude Code
 
 ## What this is
 
@@ -25,14 +25,14 @@ Files in `docs/reference/` are background only. Where they conflict with `docs/0
 - Money is integer minor units (`amountMinor`); FX rate is locked on each transaction at confirm time
 - Transfers never count as income or expense
 - No LLM / AI API calls, no auth, no Supabase, no image upload in v0
-- Product name รู้เงิน and the locked Thai copy in `docs/01-product-brief.md` §7
+- Product name เห็นเงิน and the locked Thai copy in `docs/01-product-brief.md` §7
 - Sample data is always labelled `ตัวอย่าง ไม่ใช่ยอดจริง`; never present made-up income as real
 - Do not copy Billbau's look, colors, card visuals, logo or copy
 
 ## Stack
 
 - Next.js (App Router) + TypeScript (strict) + Tailwind CSS v4
-- Client-side state; persistence via a `Repository` interface backed by `localStorage` (key `roongern.v0`) so it can be swapped for Supabase later
+- Client-side state; persistence via a `Repository` interface backed by `localStorage` (key `henngern.v0`) so it can be swapped for Supabase later
 - zod for schema validation at the storage boundary
 - Vitest for unit tests (`src/domain/**`), Playwright for e2e
 - Fonts via `next/font/google`: Be Vietnam Pro + Noto Sans Thai
