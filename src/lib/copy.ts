@@ -1,8 +1,7 @@
 // UI copy. Items marked LOCKED come from docs/01-product-brief.md §7 — change only with Grape's approval.
 
 export const PRODUCT_NAME = "เห็นเงิน"; // LOCKED (D1)
-/** Placeholder until Grape picks a tagline (docs/decision-log.md). */
-export const TAGLINE = "เงินเข้า เงินออก และวันตัด ในก้อนเดียว";
+export const TAGLINE = "จ่ายไปแล้วเท่าไร จะโดนตัดอีกเท่าไร"; // LOCKED (Grape chose option B, 2026-09-25)
 
 export const TABS = [
   { href: "/", label: "ภาพรวม" },
