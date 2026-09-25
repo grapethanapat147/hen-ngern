@@ -114,7 +114,7 @@ export function OccurrenceList({
                   label={o.kind === "income" ? "รายรับ" : "รายจ่าย"}
                   className={o.kind === "income" ? "text-sage" : ""}
                 />
-                <StatusBadge status={o.status === "overdue" ? "overdue" : "expected"} />
+                <StatusBadge status={o.status === "overdue" || o.status === "past" ? "overdue" : "expected"} />
               </div>
             </div>
             <div className="flex shrink-0 flex-col items-end gap-1">
