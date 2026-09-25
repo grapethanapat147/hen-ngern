@@ -7,6 +7,8 @@ Current milestone: **v0 — local-first, no LLM, no backend** (see `docs/04-buil
 
 ## Read before coding
 
+@AGENTS.md
+
 1. `docs/00-decision-review.md` — why things are the way they are, decisions D1–D16
 2. `docs/02-domain-rules.md` — data model + calculation rules + Golden Cases (**source of truth for numbers**)
 3. `docs/03-parser-spec.md` — Thai sentence parser rules + test cases
@@ -62,15 +64,23 @@ e2e/               # Playwright specs mapped to docs/05-acceptance.md
 - Keep commits small and scoped to one phase task. Conventional commit prefixes (`feat:`, `fix:`, `test:`, `chore:`).
 - When unsure between two interpretations, pick the one that keeps actual vs expected clearly separated, note it in `docs/decision-log.md`, and continue.
 
-## Commands (fill in after scaffold)
+## Commands
+
+Package manager: **bun** (`bun.lock`)
 
 ```
-dev:        <pm> dev
-test:       <pm> test          # vitest
-e2e:        <pm> test:e2e      # playwright
-typecheck:  <pm> typecheck
-lint:       <pm> lint
+install:    bun install
+dev:        bun dev
+build:      bun run build
+test:       bun run test          # vitest (src/**/*.test.ts)
+e2e:        bun run test:e2e      # playwright, 390×844 + 1280×800, builds + starts on :3100
+typecheck:  bun run typecheck     # next typegen && tsc --noEmit
+lint:       bun run lint
 ```
+
+In a sandbox with a preinstalled Chromium, run e2e with `PLAYWRIGHT_CHROMIUM_PATH=/opt/pw-browsers/chromium bun run test:e2e`.
+
+Next.js 16 notes live in `AGENTS.md` (read the bundled docs in `node_modules/next/dist/docs/` before using unfamiliar APIs).
 
 ## Definition of done (per phase)
 

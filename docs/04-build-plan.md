@@ -32,13 +32,13 @@ flowchart LR
 
 ## P0 — Setup
 
-- [ ] `create-next-app` (TS, App Router, Tailwind, ESLint, `src/`)
-- [ ] เพิ่ม vitest, @testing-library, playwright, zod
-- [ ] `tsconfig` strict + path alias `@/`
-- [ ] scripts: `dev`, `build`, `test`, `test:e2e`, `typecheck`, `lint`
-- [ ] ใส่ design tokens จาก `01-product-brief.md` §8 ใน `globals.css` + fonts ผ่าน `next/font`
-- [ ] อัปเดตส่วน Commands ใน `CLAUDE.md`
-- [ ] สร้าง `docs/decision-log.md` (ว่าง พร้อม template: วันที่ · เรื่อง · ตัดสิน · เหตุผล)
+- [x] `create-next-app` (TS, App Router, Tailwind, ESLint, `src/`)
+- [x] เพิ่ม vitest, @testing-library, playwright, zod
+- [x] `tsconfig` strict + path alias `@/`
+- [x] scripts: `dev`, `build`, `test`, `test:e2e`, `typecheck`, `lint`
+- [x] ใส่ design tokens จาก `01-product-brief.md` §8 ใน `globals.css` + fonts ผ่าน `next/font`
+- [x] อัปเดตส่วน Commands ใน `CLAUDE.md`
+- [x] สร้าง `docs/decision-log.md` (ว่าง พร้อม template: วันที่ · เรื่อง · ตัดสิน · เหตุผล)
 
 ## P1 — Domain core (ห้ามมี React)
 

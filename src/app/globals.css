@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* Design tokens — docs/01-product-brief.md §8. Light mode only in v0. */
+:root {
+  --paper: #f7f2ea;
+  --card: #fffcf7;
+  --ink: #161410;
+  --muted: #6b6458;
+  --line: #e6dfd2;
+  --teal: #0b6b66;
+  --sage: #3d6b4f;
+  --amber: #d99412;
+  --coral: #c24b3a;
+  --navy: #243044;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-teal: var(--teal);
+  --color-sage: var(--sage);
+  --color-amber: var(--amber);
+  --color-coral: var(--coral);
+  --color-navy: var(--navy);
+  --font-sans: var(--font-be-vietnam), var(--font-noto-thai), system-ui, sans-serif;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -26,10 +26,11 @@
 | `docs/06-experiment-plan.md` | แผน user test 8 คน + pilot + decision gate |
 | `docs/kickoff-prompts.md` | prompt สำหรับแต่ละเฟส |
 | `docs/decision-log.md` | บันทึกการตัดสินใจระหว่าง build |
+| `docs/07-next-tasks.md` | งานที่ต้องทำเพิ่ม (design system, mascot, ชื่อ) รอ Grape ตัดสิน |
 | `docs/reference/` | brief ต้นฉบับทั้ง 3 ฉบับ + ภาพหน้าจอ Billbau (อ้างอิงเท่านั้น ห้ามลอก) |
 
 ## สถานะ
 
 - Stage 3: **TEST (66/100)** — 25 ก.ย. 2026
-- ยังไม่มีโค้ด ยังไม่ได้ทดสอบกับผู้ใช้ ยังไม่ได้ deploy
+- P0 (setup) เสร็จแล้ว: Next.js 16 + bun + Vitest + Playwright · ยังไม่มี domain code (P1) · ยังไม่ได้ทดสอบกับผู้ใช้ · ยังไม่ได้ deploy
 - ไฟล์ที่ brief รู้เงินต้นฉบับอ้างถึงแต่ไม่ได้แนบมา: `รู้เงิน-scope-2026-09-25.md`, `roongern/index.html` — ถ้ามี ให้ใส่ใน `docs/reference/`
