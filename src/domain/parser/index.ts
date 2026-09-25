@@ -27,6 +27,9 @@ export interface Draft {
   cadence: "once" | Cadence;
   dayOfMonth?: number;
   trialEndsOn?: LocalDate;
+  /** Set in the review sheet, never by the parser. */
+  endsOn?: LocalDate;
+  maxOccurrences?: number;
   categoryId?: string;
   accountId?: string;
   fromAccountId?: string;

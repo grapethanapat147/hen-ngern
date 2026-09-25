@@ -23,6 +23,12 @@ export function confirmIssues(draft: Draft, settings: Settings): string[] {
   if (draft.cadence !== "once" && draft.kind !== null && draft.kind !== "income" && draft.kind !== "expense") {
     issues.push("รายการซ้ำต้องเป็นรายรับหรือรายจ่าย");
   }
+  if (draft.cadence !== "once" && draft.trialEndsOn && draft.trialEndsOn > draft.date) {
+    issues.push("วันหมดช่วงทดลองต้องไม่เกินวันเริ่มหัก");
+  }
+  if (draft.cadence !== "once" && draft.endsOn && draft.endsOn < draft.date) {
+    issues.push("วันสิ้นสุดต้องไม่ก่อนวันเริ่ม");
+  }
   return issues;
 }
 
@@ -51,6 +57,8 @@ export function confirmDraft(draft: Draft, opts: ConfirmOptions): ConfirmResult 
         cadence: draft.cadence,
         startsOn: draft.date,
         ...(draft.trialEndsOn ? { trialEndsOn: draft.trialEndsOn } : {}),
+        ...(draft.endsOn ? { endsOn: draft.endsOn } : {}),
+        ...(draft.maxOccurrences ? { maxOccurrences: draft.maxOccurrences } : {}),
         categoryId: draft.categoryId ?? (kind === "income" ? "other_in" : "other_out"),
         ...(draft.accountId ? { accountId: draft.accountId } : {}),
       },
