@@ -54,16 +54,16 @@ flowchart LR
 
 ## P2 — Storage และข้อมูลตัวอย่าง
 
-- [ ] zod schemas ตรงกับ types ใน `02-domain-rules.md` §2
-- [ ] `Repository` interface (`load`, `save`, `reset`, `exportJson`, `importJson`) + `LocalStorageRepository`
-- [ ] อ่านเสีย → สำรอง raw + เริ่มสมุดว่าง + ธงให้ UI แสดงแบนเนอร์ · localStorage ใช้ไม่ได้ → in-memory + ธง
-- [ ] seed ตัวอย่าง **สร้างวันที่สัมพันธ์กับ today** ให้อยู่ในรอบปัจจุบัน:
+- [x] zod schemas ตรงกับ types ใน `02-domain-rules.md` §2
+- [x] `Repository` interface (`load`, `save`, `reset`, `exportJson`, `importJson`) + `LocalStorageRepository`
+- [x] อ่านเสีย → สำรอง raw + เริ่มสมุดว่าง + ธงให้ UI แสดงแบนเนอร์ · localStorage ใช้ไม่ได้ → in-memory + ธง
+- [x] seed ตัวอย่าง **สร้างวันที่สัมพันธ์กับ today** ให้อยู่ในรอบปัจจุบัน:
   - รายรับ: เงินเดือน 45,000 (เกิดแล้ว), งานพาร์ตไทม์ 8,000 (rule รายเดือน, ยังไม่ถึง), งานเสริม 4,500 (เกิดแล้ว)
   - rules: Netflix, YouTube, Claude (USD), ChatGPT (USD), Notion (USD), Google One, Spotify, Fitness, ค่าเช่า, Perplexity (trial เหลือ ~7 วัน)
   - รายจ่ายครั้งเดียว: อาหาร/เดินทาง 6–10 รายการ, 1 transfer (จ่ายบัตร), 1 refund
   - บางบิลในรอบนี้ matched แล้ว บางบิลยัง upcoming
   - ทุก transaction `source: "sample"` · `note: "ตัวอย่าง ไม่ใช่ยอดจริง"`
-- [ ] state store ฝั่ง client (React context + reducer หรือ zustand) ที่เรียก domain functions
+- [x] state store ฝั่ง client (React context + reducer หรือ zustand) ที่เรียก domain functions
 
 ## P3 — Shell, ภาพรวม, แถบพิมพ์
 
