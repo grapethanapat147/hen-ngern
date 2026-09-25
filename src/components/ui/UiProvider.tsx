@@ -1,9 +1,10 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import type { Transaction } from "@/domain/types";
+import type { RecurringRule, Transaction } from "@/domain/types";
 import type { EditableDraft } from "@/lib/drafts";
 import { DraftSheet } from "../drafts/DraftSheet";
+import { RuleSheet } from "../recurring/RuleSheet";
 import { ToastRegion, type ToastData } from "./Toast";
 
 // App-wide UI: the draft review sheet and the toast. Book data lives in the store (src/lib/book.ts).
@@ -18,6 +19,7 @@ export interface DraftRequest {
 
 interface UiApi {
   openDrafts: (req: DraftRequest) => void;
+  openRule: (rule: RecurringRule) => void;
   toast: (t: Omit<ToastData, "id">) => void;
 }
 
@@ -34,6 +36,7 @@ const TOAST_MS = 5_000;
 export function UiProvider({ children }: { children: ReactNode }) {
   const [request, setRequest] = useState<DraftRequest | null>(null);
   const [toastData, setToastData] = useState<ToastData | null>(null);
+  const [rule, setRule] = useState<RecurringRule | null>(null);
   const seq = useRef(0);
 
   useEffect(() => {
@@ -47,12 +50,13 @@ export function UiProvider({ children }: { children: ReactNode }) {
     setToastData({ ...t, id: seq.current });
   }, []);
 
-  const api = useMemo<UiApi>(() => ({ openDrafts: setRequest, toast }), [toast]);
+  const api = useMemo<UiApi>(() => ({ openDrafts: setRequest, openRule: setRule, toast }), [toast]);
 
   return (
     <UiContext.Provider value={api}>
       {children}
       <DraftSheet request={request} onClose={() => setRequest(null)} />
+      <RuleSheet rule={rule} onClose={() => setRule(null)} />
       <ToastRegion toast={toastData} onDismiss={() => setToastData(null)} />
     </UiContext.Provider>
   );

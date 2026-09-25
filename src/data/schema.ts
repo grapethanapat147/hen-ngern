@@ -68,6 +68,7 @@ export const ruleSchema = z
     createdAt: z.string(),
     updatedAt: z.string(),
     deletedAt: z.string().optional(),
+    supersededBy: z.string().optional(),
   })
   .refine((r) => !r.trialEndsOn || r.trialEndsOn <= r.startsOn, "trial must end on or before the first charge");
 

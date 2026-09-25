@@ -13,11 +13,13 @@ import { StatTiles } from "@/components/overview/StatTiles";
 import { useUi } from "@/components/ui/UiProvider";
 import { useBook } from "@/lib/book";
 import { POLICY_SHORT, SENTENCE } from "@/lib/copy";
-import { draftFromOccurrence, toEditable } from "@/lib/drafts";
+import { toEditable } from "@/lib/drafts";
+import { useOccurrenceActions } from "@/lib/useOccurrenceActions";
 
 export default function OverviewPage() {
   const { snapshot, store } = useBook();
   const { openDrafts } = useUi();
+  const { pay, skip } = useOccurrenceActions();
   const [offset, setOffset] = useState(0);
 
   if (!snapshot.ready || !snapshot.state || !store) {
@@ -59,8 +61,6 @@ export default function OverviewPage() {
   const insights = bookInsights(slice, state.accounts);
   const isEmpty = state.transactions.every((t) => t.deletedAt) && state.rules.every((r) => r.deletedAt);
 
-  const pay = (o: (typeof upcoming)[number]) =>
-    openDrafts({ drafts: [draftFromOccurrence(o, `${o.ruleId}-${o.date}`)], source: "manual" });
 
   return (
     <div className="flex flex-col gap-6">
@@ -103,7 +103,7 @@ export default function OverviewPage() {
 
           <Section title="ใกล้ตัดใน 7 วัน" id="upcoming">
             {upcoming.length ? (
-              <OccurrenceList testId="upcoming" items={upcoming} today={today} settings={settings} onPay={pay} />
+              <OccurrenceList testId="upcoming" items={upcoming} today={today} settings={settings} onPay={pay} onSkip={skip} />
             ) : (
               <p className="text-sm text-muted">ไม่มีรายการที่จะถึงใน 7 วัน</p>
             )}
@@ -112,7 +112,7 @@ export default function OverviewPage() {
           {overdue.length > 0 && (
             <Section title="เลยกำหนด ยังไม่ยืนยัน" id="overdue">
               <p className="text-sm text-muted">ยังไม่นับในยอดจริงจนกว่าจะกดยืนยัน</p>
-              <OccurrenceList testId="overdue" items={overdue} today={today} settings={settings} onPay={pay} />
+              <OccurrenceList testId="overdue" items={overdue} today={today} settings={settings} onPay={pay} onSkip={skip} />
             </Section>
           )}
         </div>

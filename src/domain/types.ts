@@ -66,6 +66,8 @@ export interface RecurringRule {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
+  /** Set when an edit "from the next time on" ended this rule and continued it as another rule. */
+  supersededBy?: string;
 }
 
 export interface Settings {

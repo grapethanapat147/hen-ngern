@@ -81,12 +81,14 @@ export function OccurrenceList({
   today,
   settings,
   onPay,
+  onSkip,
   testId,
 }: {
   items: Occurrence[];
   today: string;
   settings: Settings;
   onPay: (o: Occurrence) => void;
+  onSkip?: (o: Occurrence) => void;
   testId: string;
 }) {
   return (
@@ -115,14 +117,21 @@ export function OccurrenceList({
                 <StatusBadge status={o.status === "overdue" ? "overdue" : "expected"} />
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => onPay(o)}
-              className="min-h-11 shrink-0 rounded-full border border-teal px-4 text-sm font-semibold text-teal hover:bg-teal-soft"
-            >
-              {o.kind === "income" ? "ได้รับแล้ว" : "จ่ายแล้ว"}
-              <span className="sr-only"> {o.name}</span>
-            </button>
+            <div className="flex shrink-0 flex-col items-end gap-1">
+              <button
+                type="button"
+                onClick={() => onPay(o)}
+                className="min-h-11 rounded-full border border-teal px-4 text-sm font-semibold text-teal hover:bg-teal-soft"
+              >
+                {o.kind === "income" ? "ได้รับแล้ว" : "จ่ายแล้ว"}
+                <span className="sr-only"> {o.name}</span>
+              </button>
+              {onSkip && (
+                <button type="button" onClick={() => onSkip(o)} className="min-h-9 px-2 text-xs text-muted underline">
+                  ข้ามรอบนี้<span className="sr-only"> {o.name}</span>
+                </button>
+              )}
+            </div>
           </li>
         );
       })}

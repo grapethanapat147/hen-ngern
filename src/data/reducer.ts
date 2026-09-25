@@ -15,6 +15,9 @@ export type BookAction =
   | { type: "delete_rule"; id: string; nowIso: string }
   | { type: "restore_rule"; id: string; nowIso: string }
   | { type: "skip_occurrence"; ruleId: string; date: string; nowIso: string }
+  | { type: "unskip_occurrence"; ruleId: string; date: string; nowIso: string }
+  /** Several changes saved as one step (one undo). */
+  | { type: "batch"; actions: BookAction[] }
   | { type: "update_settings"; settings: Partial<Settings> }
   | { type: "upsert_account"; account: Account };
 
@@ -65,6 +68,17 @@ export function bookReducer(state: AppState, action: BookAction): AppState {
           updatedAt: action.nowIso,
         })),
       };
+    case "unskip_occurrence":
+      return {
+        ...state,
+        rules: patch(state.rules, action.ruleId, (r) => ({
+          ...r,
+          skippedDates: (r.skippedDates ?? []).filter((d) => d !== action.date),
+          updatedAt: action.nowIso,
+        })),
+      };
+    case "batch":
+      return action.actions.reduce(bookReducer, state);
     case "update_settings":
       return {
         ...state,
