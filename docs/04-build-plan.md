@@ -42,15 +42,15 @@ flowchart LR
 
 ## P1 — Domain core (ห้ามมี React)
 
-- [ ] `money.ts` — parse ยอดจาก string → minor, format THB/USD/EUR, `toThbMinor`, round half away from zero
-- [ ] `dates.ts` — parse/format `LocalDate`, add days/months แบบ clamp, วันไทยย่อ (`5 ต.ค.`), พ.ศ.↔ค.ศ.
-- [ ] `cycle.ts` — `cycleFor(date, startDay)`, ป้ายรอบ, เลื่อนรอบ
-- [ ] `recurrence.ts` — `occurrences(rule, from, to)`, สถานะ matched/upcoming/overdue
-- [ ] `totals.ts` — รับจริง, จ่ายจริง, สุทธิ, จะตัดอีก, จะเข้าอีก, งานเสริม, breakdown หมวด/บัญชี, ตัวกรอง scope
-- [ ] `matching.ts` — หา occurrence ที่น่าจะตรงกับร่าง (±3 วัน, ชื่อ)
-- [ ] `insights.ts` — ความเห็นจากสมุด (คืนเฉพาะข้อที่คำนวณได้ พร้อม id รายการต้นทาง)
-- [ ] `parser/` — ตาม `03-parser-spec.md`
-- [ ] tests: G1–G12, P1–P18 + edge cases ที่เจอระหว่างทำ
+- [x] `money.ts` — parse ยอดจาก string → minor, format THB/USD/EUR, `toThbMinor`, round half away from zero
+- [x] `dates.ts` — parse/format `LocalDate`, add days/months แบบ clamp, วันไทยย่อ (`5 ต.ค.`), พ.ศ.↔ค.ศ.
+- [x] `cycle.ts` — `cycleFor(date, startDay)`, ป้ายรอบ, เลื่อนรอบ
+- [x] `recurrence.ts` — `occurrences(rule, from, to)`, สถานะ matched/upcoming/overdue
+- [x] `totals.ts` — รับจริง, จ่ายจริง, สุทธิ, จะตัดอีก, จะเข้าอีก, งานเสริม, breakdown หมวด/บัญชี, ตัวกรอง scope
+- [x] `matching.ts` — หา occurrence ที่น่าจะตรงกับร่าง (±3 วัน, ชื่อ)
+- [x] `insights.ts` — ความเห็นจากสมุด (คืนเฉพาะข้อที่คำนวณได้ พร้อม id รายการต้นทาง)
+- [x] `parser/` — ตาม `03-parser-spec.md`
+- [x] tests: G1–G12, P1–P18 + edge cases ที่เจอระหว่างทำ
 
 ## P2 — Storage และข้อมูลตัวอย่าง
 
