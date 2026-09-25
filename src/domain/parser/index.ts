@@ -30,6 +30,8 @@ export interface Draft {
   /** Set in the review sheet, never by the parser. */
   endsOn?: LocalDate;
   maxOccurrences?: number;
+  /** Refund → the original expense. */
+  refundOfId?: string;
   categoryId?: string;
   accountId?: string;
   fromAccountId?: string;

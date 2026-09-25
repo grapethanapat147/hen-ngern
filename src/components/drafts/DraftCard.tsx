@@ -4,6 +4,7 @@ import { useId, type ReactNode } from "react";
 import { CATEGORIES } from "@/domain/categories";
 import { formatThaiShort } from "@/domain/dates";
 import { suggestMatches } from "@/domain/matching";
+import { formatMoney } from "@/domain/money";
 import type { UncertainField } from "@/domain/parser";
 import type { AppState, Cadence, Currency, TxKind } from "@/domain/types";
 import { CADENCE_LABEL, KIND_LABEL, QUESTIONS } from "@/lib/copy";
@@ -17,6 +18,9 @@ interface Props {
   state: AppState;
   today: string;
   issues: string[];
+  mode?: "create" | "edit";
+  /** The transaction being edited, excluded from the refund picker. */
+  editingId?: string;
   onChange: (d: EditableDraft) => void;
   onRemove?: () => void;
 }
@@ -38,7 +42,7 @@ function Field({ label, flagged, children, htmlFor }: { label: string; flagged?:
 
 const KINDS: TxKind[] = ["income", "expense", "transfer", "refund"];
 
-export function DraftCard({ draft: d, index, total, state, today, issues, onChange, onRemove }: Props) {
+export function DraftCard({ draft: d, index, total, state, today, issues, mode = "create", editingId, onChange, onRemove }: Props) {
   const uid = useId();
   const id = (f: string) => `${uid}-${f}`;
   const flagged = (f: UncertainField) => d.uncertain.includes(f);
@@ -47,6 +51,13 @@ export function DraftCard({ draft: d, index, total, state, today, issues, onChan
   const isTransfer = d.kind === "transfer";
   const recurring = d.cadence !== "once";
   const categories = CATEGORIES.filter((c) => c.kind === (d.kind === "income" ? "income" : "expense"));
+  const refundable =
+    d.kind === "refund"
+      ? state.transactions
+          .filter((t) => t.kind === "expense" && !t.deletedAt && t.id !== editingId)
+          .sort((a, b) => (a.date < b.date ? 1 : -1))
+          .slice(0, 60)
+      : [];
 
   const suggestion =
     !d.match && !d.matchDismissed && !recurring && (d.kind === "income" || d.kind === "expense")
@@ -62,7 +73,7 @@ export function DraftCard({ draft: d, index, total, state, today, issues, onChan
     <section aria-labelledby={id("title")} className="flex flex-col gap-3 rounded-2xl border border-line bg-paper/60 p-3">
       <div className="flex items-center justify-between">
         <h3 id={id("title")} className="font-semibold">
-          {total > 1 ? `ร่าง ${index + 1} จาก ${total}` : "ร่าง"}
+          {mode === "edit" ? "รายการ" : total > 1 ? `ร่าง ${index + 1} จาก ${total}` : "ร่าง"}
         </h3>
         {onRemove && (
           <button type="button" onClick={onRemove} className="min-h-11 px-2 text-sm text-coral-ink underline">
@@ -229,6 +240,28 @@ export function DraftCard({ draft: d, index, total, state, today, issues, onChan
         )
       )}
 
+      {d.kind === "refund" && (
+        <Field label="คืนเงินของรายการ" htmlFor={id("refundOf")}>
+          <select
+            id={id("refundOf")}
+            className={inputClass}
+            value={d.refundOfId ?? ""}
+            onChange={(e) => {
+              const original = refundable.find((t) => t.id === e.target.value);
+              set(null, { refundOfId: original?.id, ...(original?.categoryId ? { categoryId: original.categoryId } : {}) });
+            }}
+          >
+            <option value="">ไม่ระบุ</option>
+            {refundable.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name} · {formatThaiShort(t.date)} · {formatMoney(t.amountMinor, t.currency)}
+              </option>
+            ))}
+          </select>
+        </Field>
+      )}
+
+      {mode === "create" && (
       <Field label="รูปแบบ" htmlFor={id("cadence")}>
         <select
           id={id("cadence")}
@@ -244,6 +277,7 @@ export function DraftCard({ draft: d, index, total, state, today, issues, onChan
           ))}
         </select>
       </Field>
+      )}
 
       {recurring && (
         <>

@@ -7,7 +7,7 @@ import { bookInsights } from "@/domain/insights";
 import { parseSentence } from "@/domain/parser";
 import { listOccurrences, trialInfo, type TrialInfo } from "@/domain/recurrence";
 import { accountBreakdown, cycleTotals, cycleTransactions, sideIncomeProgress } from "@/domain/totals";
-import { IconChevron } from "@/components/icons";
+import { CycleHeader } from "@/components/CycleHeader";
 import { AccountCards, InsightList, OccurrenceList, Section, SideIncomeCard, TrialCards } from "@/components/overview/Sections";
 import { StatTiles } from "@/components/overview/StatTiles";
 import { useUi } from "@/components/ui/UiProvider";
@@ -65,25 +65,8 @@ export default function OverviewPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-2">
-          <h1 className="text-lg font-semibold" aria-live="polite">
-            รอบ {cycleLabel(cycle, startDay)}
-          </h1>
-          <div className="flex gap-1">
-            <button type="button" onClick={() => setOffset((o) => o - 1)} aria-label="รอบก่อนหน้า" className="grid h-11 w-11 place-items-center rounded-full hover:bg-card">
-              <IconChevron dir="left" className="h-5 w-5" />
-            </button>
-            <button type="button" onClick={() => setOffset((o) => o + 1)} aria-label="รอบถัดไป" className="grid h-11 w-11 place-items-center rounded-full hover:bg-card">
-              <IconChevron className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
+        <CycleHeader label={cycleLabel(cycle, startDay)} offset={offset} setOffset={setOffset} />
         <StatTiles totals={totals} />
-        {offset !== 0 && (
-          <button type="button" onClick={() => setOffset(0)} className="min-h-11 self-start text-sm text-teal underline">
-            กลับไปรอบปัจจุบัน
-          </button>
-        )}
       </div>
 
       {isEmpty && (

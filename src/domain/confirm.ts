@@ -84,6 +84,29 @@ export function confirmDraft(draft: Draft, opts: ConfirmOptions): ConfirmResult 
     transaction.recurringRuleId = opts.match.ruleId;
     transaction.occurrenceDate = opts.match.occurrenceDate;
   }
-  if (draft.kind === "refund" && opts.refundOfId) transaction.refundOfId = opts.refundOfId;
+  const refundOfId = draft.refundOfId ?? opts.refundOfId;
+  if (draft.kind === "refund" && refundOfId) transaction.refundOfId = refundOfId;
   return { type: "transaction", transaction };
+}
+
+/**
+ * Apply a reviewed edit to a saved transaction. Keeps id, createdAt and source.
+ * The locked FX rate is kept unless the currency changed (then today's rate is locked).
+ * `match` undefined = unlinked from any occurrence.
+ */
+export function applyTransactionEdit(
+  original: Transaction,
+  draft: Draft,
+  opts: { settings: Settings; nowIso: string; match?: { ruleId: string; occurrenceDate: LocalDate } },
+): Transaction {
+  const result = confirmDraft(
+    { ...draft, cadence: "once" },
+    { settings: opts.settings, nowIso: opts.nowIso, newId: () => original.id, source: original.source, match: opts.match },
+  );
+  if (result.type !== "transaction") throw new Error("edit must stay a transaction");
+  const edited = result.transaction;
+  if (edited.currency === original.currency) edited.fxRateToThb = original.fxRateToThb;
+  edited.createdAt = original.createdAt;
+  if (original.note) edited.note = original.note;
+  return edited;
 }

@@ -4,7 +4,7 @@ import { useEffect, useId, useState } from "react";
 import { parseSentence } from "@/domain/parser";
 import { useBook } from "@/lib/book";
 import { SENTENCE } from "@/lib/copy";
-import { toEditable } from "@/lib/drafts";
+import { nextDraftKey, toEditable } from "@/lib/drafts";
 import { useUi } from "./ui/UiProvider";
 
 export function SentenceBar() {
@@ -31,7 +31,7 @@ export function SentenceBar() {
     }
     setError(false);
     openDrafts({
-      drafts: drafts.map((d, i) => toEditable(d, `${Date.now()}-${i}`)),
+      drafts: drafts.map((d, i) => toEditable(d, nextDraftKey(`s${i}`))),
       source: "sentence",
       onSaved: () => setText(""),
     });

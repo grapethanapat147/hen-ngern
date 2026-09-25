@@ -143,5 +143,55 @@ export const categoryBreakdown = (slice: Pick<BookSlice, "transactions" | "cycle
 export const accountBreakdown = (slice: Pick<BookSlice, "transactions" | "cycle" | "scope">): Breakdown[] =>
   breakdown(cycleTransactions(slice), slice.transactions, (t) => t.accountId);
 
+// --- Transaction list (เงินเข้า-ออก) -----------------------------------------------
+
+export type ListFilter = "all" | "income" | "expense" | "transfer";
+
+export interface ListQuery {
+  filter: ListFilter;
+  workOnly?: boolean;
+  search?: string;
+}
+
+const KIND_FILTER: Record<ListFilter, (t: Transaction) => boolean> = {
+  all: () => true,
+  income: (t) => t.kind === "income",
+  // Refunds belong with spending: they reduce it.
+  expense: (t) => t.kind === "expense" || t.kind === "refund",
+  transfer: (t) => t.kind === "transfer",
+};
+
+/** Live rows matching the chips and search, newest first. */
+export function filterTransactions(txs: Transaction[], q: ListQuery): Transaction[] {
+  const needle = q.search?.trim().toLowerCase() ?? "";
+  return txs
+    .filter((t) => !t.deletedAt && KIND_FILTER[q.filter](t) && (!q.workOnly || t.scope === "work"))
+    .filter((t) => !needle || t.name.toLowerCase().includes(needle))
+    .sort((a, b) => (a.date !== b.date ? (a.date < b.date ? 1 : -1) : a.createdAt < b.createdAt ? 1 : -1));
+}
+
+/**
+ * Header total for what the list shows.
+ * all → net (income − expense + refund, transfers excluded) · income → Σ income ·
+ * expense → Σ expense − Σ refund · transfer → Σ transfer (moved, not spent).
+ */
+export function listTotalMinor(txs: Transaction[], filter: ListFilter): number {
+  let total = 0;
+  for (const t of txs) {
+    const thb = txThbMinor(t);
+    if (filter === "transfer") {
+      if (t.kind === "transfer") total += thb;
+      continue;
+    }
+    if (t.kind === "income" && filter !== "expense") total += thb;
+    if (t.kind === "expense") total += filter === "expense" ? thb : -thb;
+    if (t.kind === "refund") total += filter === "expense" ? -thb : thb;
+  }
+  return total;
+}
+
+/** Day net for the list's day headers: income − expense + refund; transfers excluded. */
+export const dayNetMinor = (txs: Transaction[]): number => listTotalMinor(txs, "all");
+
 export const dayBreakdown = (slice: Pick<BookSlice, "transactions" | "cycle" | "scope">): Breakdown[] =>
   breakdown(cycleTransactions(slice), slice.transactions, (t) => t.date);

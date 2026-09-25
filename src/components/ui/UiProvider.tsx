@@ -12,6 +12,8 @@ export interface DraftRequest {
   drafts: EditableDraft[];
   source: Transaction["source"];
   onSaved?: () => void;
+  /** Editing a saved transaction (single draft). */
+  edit?: Transaction;
 }
 
 interface UiApi {

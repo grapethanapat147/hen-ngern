@@ -3,7 +3,7 @@ import { confirmIssues } from "@/domain/confirm";
 import { parseAmountToMinor } from "@/domain/money";
 import type { Draft, UncertainField } from "@/domain/parser";
 import type { Occurrence } from "@/domain/recurrence";
-import type { Account, LocalDate, Settings, TxKind } from "@/domain/types";
+import type { Account, LocalDate, RecurringRule, Settings, Transaction, TxKind } from "@/domain/types";
 
 // Review-sheet state for drafts: pure helpers so the rules are unit-tested outside React.
 
@@ -106,3 +106,49 @@ export function editableIssues(d: EditableDraft, settings: Settings): string[] {
   }
   return issues;
 }
+
+/** An empty manual draft for "+ รายการ". */
+export function blankDraft(today: LocalDate, accounts: Account[], key: string): EditableDraft {
+  return {
+    key,
+    kind: "expense",
+    name: "",
+    amountMinor: null,
+    amountText: "",
+    currency: "THB",
+    date: today,
+    cadence: "once",
+    categoryId: "other_out",
+    accountId: accounts.find((a) => a.type === "cash" && !a.hidden)?.id,
+    scope: "personal",
+    uncertain: [],
+  };
+}
+
+/** A saved transaction opened for editing. */
+export function draftFromTransaction(t: Transaction, rules: RecurringRule[]): EditableDraft {
+  const rule = t.recurringRuleId ? rules.find((r) => r.id === t.recurringRuleId) : undefined;
+  return {
+    key: t.id,
+    kind: t.kind,
+    name: t.name,
+    amountMinor: t.amountMinor,
+    amountText: minorToInput(t.amountMinor),
+    currency: t.currency,
+    date: t.date,
+    cadence: "once",
+    ...(t.categoryId ? { categoryId: t.categoryId } : {}),
+    ...(t.accountId ? { accountId: t.accountId } : {}),
+    ...(t.fromAccountId ? { fromAccountId: t.fromAccountId, toAccountId: t.toAccountId } : {}),
+    ...(t.refundOfId ? { refundOfId: t.refundOfId } : {}),
+    scope: t.scope,
+    uncertain: [],
+    ...(t.recurringRuleId && t.occurrenceDate
+      ? { match: { ruleId: t.recurringRuleId, occurrenceDate: t.occurrenceDate, ruleName: rule?.name ?? t.name } }
+      : {}),
+  };
+}
+
+let keySeq = 0;
+/** Unique React key for a new draft. */
+export const nextDraftKey = (prefix = "draft"): string => `${prefix}-${++keySeq}`;
