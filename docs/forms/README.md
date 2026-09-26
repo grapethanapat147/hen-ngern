@@ -1,6 +1,11 @@
-# Google Form: ใบขออนุญาตผู้ทดสอบ
+# Google Forms สำหรับ user test
 
-`consent-form.gs` สร้าง Google Form จาก `docs/11-consent-form.md` พร้อม Google Sheet เก็บคำตอบ ใน Drive ของคนที่กดรัน
+| ไฟล์ | สร้างอะไร | ฟังก์ชันที่ต้องรัน |
+|---|---|---|
+| `screener-form.gs` | แบบคัดกรองผู้สมัคร (`docs/12-recruiting-kit.md` §3) | `createScreenerForm` |
+| `consent-form.gs` | ใบขออนุญาต (`docs/11-consent-form.md`) | `createConsentForm` |
+
+แต่ละ script สร้าง Google Form พร้อม Google Sheet เก็บคำตอบ ใน Drive ของคนที่กดรัน · วิธีใช้เหมือนกัน (ด้านล่างใช้ใบขออนุญาตเป็นตัวอย่าง) · แบบคัดกรองต้องเติม `slots` เป็นช่วงเวลาที่เปิดจริงด้วย
 
 ## ขั้นตอน (~5 นาที)
 
