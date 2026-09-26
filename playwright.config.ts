@@ -7,7 +7,8 @@ const PORT = 3100;
 export default defineConfig({
   testDir: "e2e",
   fullyParallel: true,
-  reporter: "list",
+  // CI keeps an HTML report as a build artifact when something fails.
+  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: `http://localhost:${PORT}`,
     launchOptions: executablePath ? { executablePath } : undefined,

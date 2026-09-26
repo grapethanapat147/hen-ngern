@@ -80,6 +80,8 @@ lint:       bun run lint
 
 In a sandbox with a preinstalled Chromium, run e2e with `PLAYWRIGHT_CHROMIUM_PATH=/opt/pw-browsers/chromium bun run test:e2e`.
 
+CI: `.github/workflows/ci.yml` runs typecheck, lint, unit tests and build, plus the Playwright suite (both viewports) on every pull request and on pushes to `henngern-main`.
+
 Next.js 16 notes live in `AGENTS.md` (read the bundled docs in `node_modules/next/dist/docs/` before using unfamiliar APIs).
 
 ## Definition of done (per phase)
