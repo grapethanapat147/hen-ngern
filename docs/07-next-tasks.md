@@ -44,8 +44,8 @@ Token สีมีแล้วใน `01-product-brief.md` §8 และ `src/ap
 | # | งาน | Owner |
 |---|---|---|
 | T14 | หาผู้ทดสอบ 8 คน (บิลซ้ำ 4 · งานเสริม/ฟรีแลนซ์ 4) + นัดเวลา 7–10 วันหลัง P7 | Grape |
-| T15 | ใบขออนุญาตเก็บประโยคที่พิมพ์ (ใช้เป็น eval set v0.1) + script สัมภาษณ์ 10 นาที | Grape เขียน · Claude review |
-| T16 | หา Legal/PDPA reviewer ก่อน v0.2 (ตอนนี้ยังไม่มี) | Grape |
+| T15 | ~~ใบขออนุญาต + script สัมภาษณ์~~ **ร่างแล้ว** → `10-user-test-script.md`, `11-consent-form.md` · เหลือ Grape เติมช่อง `[ … ]` (ติดต่อ, ระยะเก็บข้อมูล, ค่าตอบแทน) และตรวจ | Claude ร่าง · Grape ตรวจ |
+| T16 | หา Legal/PDPA reviewer — ควรอ่าน `11-consent-form.md` ก่อน pilot รอบ 2 (ใช้ข้อมูลจริง) และต้องมีก่อน v0.2 | Grape |
 | T17 | สร้างบัญชี Vercel และกด deploy preview เอง (P7) | Grape |
 
 ---
