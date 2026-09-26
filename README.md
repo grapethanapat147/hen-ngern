@@ -1,11 +1,11 @@
-# รู้เงิน (roongern) — Starter kit
+# เห็นเงิน (henngern)
 
 ชุดเอกสารสำหรับเริ่มโปรเจกต์ใหม่ใน Claude Code · ยังไม่มีโค้ด (Claude Code จะ scaffold ในเฟส P0)
 
 ## วิธีใช้
 
-1. แตก zip ไปไว้ในโฟลเดอร์ว่าง เช่น `~/Projects/roongern`
-2. `cd ~/Projects/roongern && git init && git add . && git commit -m "docs: starter kit"`
+1. แตก zip ไปไว้ในโฟลเดอร์ว่าง เช่น `~/Projects/hen-ngern`
+2. `cd ~/Projects/hen-ngern && git init && git add . && git commit -m "docs: starter kit"`
 3. เปิด `claude` ในโฟลเดอร์นั้น
 4. วาง prompt "เริ่มโปรเจกต์" จาก `docs/kickoff-prompts.md`
 5. ทำทีละเฟส รอรายงานก่อนสั่งเฟสถัดไป
@@ -26,10 +26,27 @@
 | `docs/06-experiment-plan.md` | แผน user test 8 คน + pilot + decision gate |
 | `docs/kickoff-prompts.md` | prompt สำหรับแต่ละเฟส |
 | `docs/decision-log.md` | บันทึกการตัดสินใจระหว่าง build |
+| `docs/07-next-tasks.md` | งานที่ต้องทำเพิ่ม (design system, mascot, ชื่อ) รอ Grape ตัดสิน |
+| `docs/08-qa-report.md` | ผล acceptance รายข้อ (P7) |
+| `docs/09-deploy-vercel.md` | ขั้นตอน deploy preview ให้ Grape กดเอง |
+| `docs/10-user-test-script.md` | สคริปต์ user test รอบ 1 + ใบจดบันทึก + วิธีนับผล H1–H5 |
+| `docs/11-consent-form.md` | ใบขออนุญาตผู้ทดสอบ (ร่าง ยังไม่ผ่านผู้ตรวจ PDPA) |
+| `docs/forms/` | Google Apps Script สร้าง Google Form ใบขออนุญาต + วิธีใช้ |
 | `docs/reference/` | brief ต้นฉบับทั้ง 3 ฉบับ + ภาพหน้าจอ Billbau (อ้างอิงเท่านั้น ห้ามลอก) |
 
-## สถานะ
+## สถานะ (26 ก.ย. 2026)
 
-- Stage 3: **TEST (66/100)** — 25 ก.ย. 2026
-- ยังไม่มีโค้ด ยังไม่ได้ทดสอบกับผู้ใช้ ยังไม่ได้ deploy
-- ไฟล์ที่ brief รู้เงินต้นฉบับอ้างถึงแต่ไม่ได้แนบมา: `รู้เงิน-scope-2026-09-25.md`, `roongern/index.html` — ถ้ามี ให้ใส่ใน `docs/reference/`
+- **v0 P0–P7 เสร็จในโค้ด** · unit 166 ข้อ + e2e 116 ข้อ ผ่าน · acceptance A-D1…A-26 ผ่านทุกข้อ (A-21 ยังต้องเปิดใน Excel/Sheets ด้วยคน) → `docs/08-qa-report.md`
+- **ยังไม่ได้ deploy** — ขั้นตอนให้ Grape กดเองอยู่ที่ `docs/09-deploy-vercel.md`
+- **ยังไม่ได้ทดสอบกับผู้ใช้** — แผนอยู่ที่ `docs/06-experiment-plan.md`
+- Stage 3: TEST (66/100) — จะเปลี่ยนได้หลัง user test ตาม decision gate
+
+## คำสั่ง
+
+```bash
+bun install
+bun dev                 # http://localhost:3000
+bun run test            # unit (Vitest)
+bun run test:e2e        # Playwright 390×844 + 1280×800 (build + start บน :3100)
+bun run typecheck && bun run lint
+```

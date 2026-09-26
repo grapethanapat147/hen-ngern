@@ -92,7 +92,7 @@ export interface AppState {
 }
 ```
 
-Storage key: `roongern.v0` · validate ด้วย zod ตอนอ่าน · อ่านไม่ผ่าน → เก็บ raw ไว้ที่ `roongern.v0.corrupt-<timestamp>` แล้วเริ่มสมุดว่าง
+Storage key: `henngern.v0` · validate ด้วย zod ตอนอ่าน · อ่านไม่ผ่าน → เก็บ raw ไว้ที่ `henngern.v0.corrupt-<timestamp>` แล้วเริ่มสมุดว่าง
 
 ## 3. หมวดหมู่ (ค่าเริ่ม, id คงที่)
 

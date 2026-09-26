@@ -1,4 +1,4 @@
-# รู้เงิน (roongern) — Project instructions for Claude Code
+# เห็นเงิน (henngern) — Project instructions for Claude Code
 
 ## What this is
 
@@ -6,6 +6,8 @@
 Current milestone: **v0 — local-first, no LLM, no backend** (see `docs/04-build-plan.md`)
 
 ## Read before coding
+
+@AGENTS.md
 
 1. `docs/00-decision-review.md` — why things are the way they are, decisions D1–D16
 2. `docs/02-domain-rules.md` — data model + calculation rules + Golden Cases (**source of truth for numbers**)
@@ -23,14 +25,14 @@ Files in `docs/reference/` are background only. Where they conflict with `docs/0
 - Money is integer minor units (`amountMinor`); FX rate is locked on each transaction at confirm time
 - Transfers never count as income or expense
 - No LLM / AI API calls, no auth, no Supabase, no image upload in v0
-- Product name รู้เงิน and the locked Thai copy in `docs/01-product-brief.md` §7
+- Product name เห็นเงิน and the locked Thai copy in `docs/01-product-brief.md` §7
 - Sample data is always labelled `ตัวอย่าง ไม่ใช่ยอดจริง`; never present made-up income as real
 - Do not copy Billbau's look, colors, card visuals, logo or copy
 
 ## Stack
 
 - Next.js (App Router) + TypeScript (strict) + Tailwind CSS v4
-- Client-side state; persistence via a `Repository` interface backed by `localStorage` (key `roongern.v0`) so it can be swapped for Supabase later
+- Client-side state; persistence via a `Repository` interface backed by `localStorage` (key `henngern.v0`) so it can be swapped for Supabase later
 - zod for schema validation at the storage boundary
 - Vitest for unit tests (`src/domain/**`), Playwright for e2e
 - Fonts via `next/font/google`: Be Vietnam Pro + Noto Sans Thai
@@ -62,15 +64,25 @@ e2e/               # Playwright specs mapped to docs/05-acceptance.md
 - Keep commits small and scoped to one phase task. Conventional commit prefixes (`feat:`, `fix:`, `test:`, `chore:`).
 - When unsure between two interpretations, pick the one that keeps actual vs expected clearly separated, note it in `docs/decision-log.md`, and continue.
 
-## Commands (fill in after scaffold)
+## Commands
+
+Package manager: **bun** (`bun.lock`)
 
 ```
-dev:        <pm> dev
-test:       <pm> test          # vitest
-e2e:        <pm> test:e2e      # playwright
-typecheck:  <pm> typecheck
-lint:       <pm> lint
+install:    bun install
+dev:        bun dev
+build:      bun run build
+test:       bun run test          # vitest (src/**/*.test.ts)
+e2e:        bun run test:e2e      # playwright, 390×844 + 1280×800, builds + starts on :3100
+typecheck:  bun run typecheck     # next typegen && tsc --noEmit
+lint:       bun run lint
 ```
+
+In a sandbox with a preinstalled Chromium, run e2e with `PLAYWRIGHT_CHROMIUM_PATH=/opt/pw-browsers/chromium bun run test:e2e`.
+
+CI: `.github/workflows/ci.yml` runs typecheck, lint, unit tests and build, plus the Playwright suite (both viewports) on every pull request and on pushes to `henngern-main`.
+
+Next.js 16 notes live in `AGENTS.md` (read the bundled docs in `node_modules/next/dist/docs/` before using unfamiliar APIs).
 
 ## Definition of done (per phase)
 
