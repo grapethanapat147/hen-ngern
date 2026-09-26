@@ -152,3 +152,25 @@ export function draftFromTransaction(t: Transaction, rules: RecurringRule[]): Ed
 let keySeq = 0;
 /** Unique React key for a new draft. */
 export const nextDraftKey = (prefix = "draft"): string => `${prefix}-${++keySeq}`;
+
+/** Fields compared to measure how often the parser's guess had to be fixed (pilot metric, 06-experiment-plan). */
+export const CORRECTABLE_FIELDS = ["kind", "name", "amount", "currency", "date", "cadence", "category", "account", "trial"] as const;
+
+/**
+ * Which fields the user changed between the parser's draft and what they saved.
+ * Answering a mandatory question (kind was null) is not a correction.
+ */
+export function correctedFields(parsed: Draft, saved: Draft): string[] {
+  const changed: string[] = [];
+  if (parsed.kind !== null && parsed.kind !== saved.kind) changed.push("kind");
+  if (parsed.name.trim() !== saved.name.trim()) changed.push("name");
+  if (parsed.amountMinor !== saved.amountMinor) changed.push("amount");
+  if (parsed.currency !== saved.currency) changed.push("currency");
+  if (parsed.date !== saved.date) changed.push("date");
+  if (parsed.cadence !== saved.cadence) changed.push("cadence");
+  if (saved.kind !== "transfer" && (parsed.categoryId ?? "") !== (saved.categoryId ?? "")) changed.push("category");
+  const acct = (d: Draft) => (d.kind === "transfer" ? `${d.fromAccountId ?? ""}>${d.toAccountId ?? ""}` : d.accountId ?? "");
+  if (parsed.kind !== null && acct(parsed) !== acct(saved)) changed.push("account");
+  if ((parsed.trialEndsOn ?? "") !== (saved.trialEndsOn ?? "")) changed.push("trial");
+  return changed;
+}

@@ -108,5 +108,6 @@ export function applyTransactionEdit(
   if (edited.currency === original.currency) edited.fxRateToThb = original.fxRateToThb;
   edited.createdAt = original.createdAt;
   if (original.note) edited.note = original.note;
+  if (original.correctedFields) edited.correctedFields = original.correctedFields;
   return edited;
 }

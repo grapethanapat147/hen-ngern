@@ -4,7 +4,7 @@ import { useState } from "react";
 import { applyTransactionEdit, confirmDraft } from "@/domain/confirm";
 import type { RecurringRule, Transaction } from "@/domain/types";
 import { useBook } from "@/lib/book";
-import { editableIssues, type EditableDraft } from "@/lib/drafts";
+import { correctedFields, editableIssues, type EditableDraft } from "@/lib/drafts";
 import { Sheet } from "../ui/Sheet";
 import { useUi, type DraftRequest } from "../ui/UiProvider";
 import { DraftCard } from "./DraftCard";
@@ -52,6 +52,11 @@ function DraftEditor({ request, onClose }: { request: DraftRequest; onClose: () 
     const rules: RecurringRule[] = [];
     for (const d of drafts) {
       const result = confirmDraft(d, { settings: state.settings, nowIso, newId, source: request.source, match: matchOf(d) });
+      // Pilot metric: what the user had to fix in the parser's guess (field names only).
+      const parsed = request.source === "sentence" ? request.drafts.find((x) => x.key === d.key) : undefined;
+      const corrected = parsed ? correctedFields(parsed, d) : undefined;
+      const record = result.type === "transaction" ? result.transaction : result.rule;
+      if (corrected) record.correctedFields = corrected;
       if (result.type === "transaction") transactions.push(result.transaction);
       else rules.push(result.rule);
     }

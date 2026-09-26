@@ -43,6 +43,7 @@ export const transactionSchema = z
     createdAt: z.string(),
     updatedAt: z.string(),
     deletedAt: z.string().optional(),
+    correctedFields: z.array(z.string()).optional(),
   })
   .refine((t) => t.kind !== "transfer" || (t.fromAccountId && t.toAccountId), "transfer needs from and to accounts")
   .refine((t) => t.currency !== "THB" || t.fxRateToThb === 1, "THB rate must be 1")
@@ -68,6 +69,7 @@ export const ruleSchema = z
     createdAt: z.string(),
     updatedAt: z.string(),
     deletedAt: z.string().optional(),
+    correctedFields: z.array(z.string()).optional(),
     supersededBy: z.string().optional(),
   })
   .refine((r) => !r.trialEndsOn || r.trialEndsOn <= r.startsOn, "trial must end on or before the first charge");

@@ -42,6 +42,8 @@ export interface Transaction {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
+  /** Sentence entries only: draft fields the user changed from the parser's guess (names, never values). */
+  correctedFields?: string[];
 }
 
 export interface RecurringRule {
@@ -66,6 +68,8 @@ export interface RecurringRule {
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
+  /** Sentence entries only: draft fields the user changed from the parser's guess (names, never values). */
+  correctedFields?: string[];
   /** Set when an edit "from the next time on" ended this rule and continued it as another rule. */
   supersededBy?: string;
 }

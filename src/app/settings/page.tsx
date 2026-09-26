@@ -7,6 +7,7 @@ import { ACCOUNT_TYPES, AccountSheet } from "@/components/settings/AccountSheet"
 import { useUi } from "@/components/ui/UiProvider";
 import { cycleFor } from "@/domain/cycle";
 import { transactionsToCsv } from "@/domain/csv";
+import { toResearchExport } from "@/domain/research";
 import { parseAmountToMinor } from "@/domain/money";
 import { accountBreakdown, cycleTotals, sideIncomeProgress } from "@/domain/totals";
 import type { Account, AppState } from "@/domain/types";
@@ -90,7 +91,7 @@ const parseGoal = (text: string): number | null => {
   return minor !== null && minor > 0 ? minor : null;
 };
 
-type Confirming = null | "sample" | "clear" | { type: "import"; state: AppState };
+type Confirming = null | "sample" | "clear" | "research" | { type: "import"; state: AppState };
 
 export default function SettingsPage() {
   const { snapshot, store } = useBook();
@@ -258,6 +259,9 @@ export default function SettingsPage() {
               <button type="button" className={button} onClick={() => downloadText(transactionsToCsv(state), `henngern-${today}.csv`, "text/csv;charset=utf-8")}>
                 ส่งออก CSV
               </button>
+              <button type="button" className={button} onClick={() => setConfirming("research")}>
+                ส่งออกสำหรับงานวิจัย
+              </button>
               <button type="button" className={button} onClick={() => setConfirming("sample")}>
                 โหลดข้อมูลตัวอย่าง
               </button>
@@ -279,6 +283,45 @@ export default function SettingsPage() {
                   toast({ message: "นำเข้าแล้ว" });
                 },
               )}
+            {confirming === "research" &&
+              (() => {
+                const research = toResearchExport(state, { today });
+                const preview = { ...research, transactions: research.transactions.slice(0, 2), rules: research.rules.slice(0, 1) };
+                return (
+                  <div role="group" aria-label="ส่งออกสำหรับงานวิจัย" data-testid="research-panel" className="flex flex-col gap-2 rounded-xl bg-teal-soft p-3 text-sm">
+                    <p className="font-semibold">ไฟล์สำหรับส่งให้ทีมวิจัย (เฉพาะคนที่ยินยอม)</p>
+                    <p>
+                      <span className="font-medium">ไม่มี:</span> ชื่อรายการ · หมายเหตุ · ยอดเงิน · เรท · ชื่อบัญชี · 4 ตัวท้าย · เวลาที่จด
+                    </p>
+                    <p>
+                      <span className="font-medium">มี:</span> ชนิด · หมวด · วันที่ · สกุลเงิน · ประเภทบัญชี · วันที่จด · ช่องที่ต้องแก้จากร่าง
+                    </p>
+                    <p className="text-muted">
+                      รายการที่คุณจดเอง {research.summary.confirmedCount} รายการ · จด {research.summary.activeDays} วัน
+                      {state.isSample && " · ตอนนี้เป็นข้อมูลตัวอย่าง ไฟล์จะยังไม่มีข้อมูลการใช้งานของคุณ"}
+                    </p>
+                    <details>
+                      <summary className="min-h-11 cursor-pointer content-center font-medium">ดูตัวอย่างข้อมูลในไฟล์</summary>
+                      <pre className="max-h-64 overflow-auto rounded-lg bg-card p-2 text-xs whitespace-pre-wrap">{JSON.stringify(preview, null, 2)}</pre>
+                    </details>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        className="min-h-11 rounded-full bg-teal px-4 font-semibold text-white"
+                        onClick={() => {
+                          downloadText(JSON.stringify(research, null, 2), `henngern-research-${today}.json`, "application/json");
+                          setConfirming(null);
+                        }}
+                      >
+                        ดาวน์โหลดไฟล์วิจัย
+                      </button>
+                      <button type="button" onClick={() => setConfirming(null)} className="min-h-11 rounded-full border border-line bg-card px-4">
+                        ยกเลิก
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()}
             {confirming === "sample" &&
               confirmBox("แทนที่ข้อมูลทั้งหมดในเครื่องด้วยข้อมูลตัวอย่าง?", "โหลดตัวอย่าง", () => {
                 store.loadSample();

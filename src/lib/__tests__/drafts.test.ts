@@ -89,3 +89,24 @@ describe("review-sheet drafts", () => {
     expect(r.rule).toMatchObject({ endsOn: "2027-09-30", maxOccurrences: 12 });
   });
 });
+
+describe("correctedFields (pilot metric)", () => {
+  it("nothing changed → no corrections", async () => {
+    const { correctedFields } = await import("../drafts");
+    const d = draft("กาแฟ 65 เงินสด");
+    expect(correctedFields(d, d)).toEqual([]);
+  });
+
+  it("lists the fields the user fixed, never their values", async () => {
+    const { correctedFields } = await import("../drafts");
+    const d = draft("แท็กซี่ 220");
+    const saved = { ...changeKind(d, "expense", accounts), categoryId: "food", accountId: "kbank", amountMinor: 25_000 };
+    expect(correctedFields(d, saved)).toEqual(["amount", "category", "account"]);
+  });
+
+  it("answering a mandatory question is not a correction", async () => {
+    const { correctedFields } = await import("../drafts");
+    const q = draft("จ่ายบัตร 8,000");
+    expect(correctedFields(q, answerQuestion(q, "transfer", accounts))).toEqual([]);
+  });
+});
