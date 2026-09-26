@@ -16,7 +16,7 @@
     "db:status": "supabase status",
     "db:reset": "supabase db reset",
     "db:migration": "supabase migration new",
-    "db:types": "supabase gen types typescript --local > src/types/database.ts"
+    "db:types": "mkdir -p src/types && supabase gen types typescript --local > src/types/database.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

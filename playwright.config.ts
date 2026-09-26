@@ -18,7 +18,8 @@ export default defineConfig({
       : {},
   },
   projects: [
-    // Player viewport (docs/05 P4: 390×844); host viewports are added in P4.
+    // P0 smoke only. P4 adds the player (390×844) and host (1280×720,
+    // 1920×1080) viewports from docs/05.
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
   ],
   webServer: {
