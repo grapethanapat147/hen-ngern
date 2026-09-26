@@ -31,6 +31,7 @@
 | `docs/09-deploy-vercel.md` | ขั้นตอน deploy preview ให้ Grape กดเอง |
 | `docs/10-user-test-script.md` | สคริปต์ user test รอบ 1 + ใบจดบันทึก + วิธีนับผล H1–H5 |
 | `docs/11-consent-form.md` | ใบขออนุญาตผู้ทดสอบ (ร่าง ยังไม่ผ่านผู้ตรวจ PDPA) |
+| `docs/forms/` | Google Apps Script สร้าง Google Form ใบขออนุญาต + วิธีใช้ |
 | `docs/reference/` | brief ต้นฉบับทั้ง 3 ฉบับ + ภาพหน้าจอ Billbau (อ้างอิงเท่านั้น ห้ามลอก) |
 
 ## สถานะ (26 ก.ย. 2026)
