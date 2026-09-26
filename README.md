@@ -27,10 +27,23 @@
 | `docs/kickoff-prompts.md` | prompt สำหรับแต่ละเฟส |
 | `docs/decision-log.md` | บันทึกการตัดสินใจระหว่าง build |
 | `docs/07-next-tasks.md` | งานที่ต้องทำเพิ่ม (design system, mascot, ชื่อ) รอ Grape ตัดสิน |
+| `docs/08-qa-report.md` | ผล acceptance รายข้อ (P7) |
+| `docs/09-deploy-vercel.md` | ขั้นตอน deploy preview ให้ Grape กดเอง |
 | `docs/reference/` | brief ต้นฉบับทั้ง 3 ฉบับ + ภาพหน้าจอ Billbau (อ้างอิงเท่านั้น ห้ามลอก) |
 
-## สถานะ
+## สถานะ (26 ก.ย. 2026)
 
-- Stage 3: **TEST (66/100)** — 25 ก.ย. 2026
-- P0 (setup) เสร็จแล้ว: Next.js 16 + bun + Vitest + Playwright · ยังไม่มี domain code (P1) · ยังไม่ได้ทดสอบกับผู้ใช้ · ยังไม่ได้ deploy
-- ไฟล์ที่ brief รู้เงินต้นฉบับอ้างถึงแต่ไม่ได้แนบมา: `รู้เงิน-scope-2026-09-25.md`, `roongern/index.html` — ถ้ามี ให้ใส่ใน `docs/reference/`
+- **v0 P0–P7 เสร็จในโค้ด** · unit 166 ข้อ + e2e 116 ข้อ ผ่าน · acceptance A-D1…A-26 ผ่านทุกข้อ (A-21 ยังต้องเปิดใน Excel/Sheets ด้วยคน) → `docs/08-qa-report.md`
+- **ยังไม่ได้ deploy** — ขั้นตอนให้ Grape กดเองอยู่ที่ `docs/09-deploy-vercel.md`
+- **ยังไม่ได้ทดสอบกับผู้ใช้** — แผนอยู่ที่ `docs/06-experiment-plan.md`
+- Stage 3: TEST (66/100) — จะเปลี่ยนได้หลัง user test ตาม decision gate
+
+## คำสั่ง
+
+```bash
+bun install
+bun dev                 # http://localhost:3000
+bun run test            # unit (Vitest)
+bun run test:e2e        # Playwright 390×844 + 1280×800 (build + start บน :3100)
+bun run typecheck && bun run lint
+```

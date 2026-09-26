@@ -96,11 +96,11 @@ flowchart LR
 
 ## P7 — QA และ preview
 
-- [ ] Playwright ครบตาม `05-acceptance.md` ที่ 390×844 และ 1280×800
-- [ ] a11y: axe ไม่มี violation ระดับ serious/critical, keyboard ครบ flow
-- [ ] ตรวจ copy เทียบ §7 ของ product brief
-- [ ] Deploy preview บน Vercel — **Grape เป็นคนกดเอง** Claude Code เตรียม config และวิธีทำให้
-- [ ] สรุปผล: ผ่าน/ไม่ผ่านรายข้อ + สิ่งที่ยังไม่ได้ทำ
+- [x] Playwright ครบตาม `05-acceptance.md` ที่ 390×844 และ 1280×800
+- [x] a11y: axe ไม่มี violation ระดับ serious/critical, keyboard ครบ flow
+- [x] ตรวจ copy เทียบ §7 ของ product brief
+- [ ] Deploy preview บน Vercel — **Grape เป็นคนกดเอง** · ขั้นตอนพร้อมแล้วใน `09-deploy-vercel.md` (ยังไม่ได้ deploy)
+- [x] สรุปผล: ผ่าน/ไม่ผ่านรายข้อ + สิ่งที่ยังไม่ได้ทำ → `08-qa-report.md`
 
 ---
 
