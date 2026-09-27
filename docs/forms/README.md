@@ -3,9 +3,10 @@
 | ไฟล์ | สร้างอะไร | ฟังก์ชันที่ต้องรัน |
 |---|---|---|
 | `screener-form.gs` | แบบคัดกรองผู้สมัคร (`docs/12-recruiting-kit.md` §3) | `createScreenerForm` |
-| `consent-form.gs` | ใบขออนุญาต (`docs/11-consent-form.md`) | `createConsentForm` |
+| `consent-form.gs` | ใบขออนุญาต user test รอบ 1 (`docs/11-consent-form.md`) | `createConsentForm` |
+| `pilot-forms.gs` | ใบยินยอม pilot รอบ 2 + แบบฟอร์มรายสัปดาห์ (`docs/13-pilot-consent-form.md`) | `createPilotConsentForm`, `createWeeklyCheckinForm` |
 
-แต่ละ script สร้าง Google Form พร้อม Google Sheet เก็บคำตอบ ใน Drive ของคนที่กดรัน · วิธีใช้เหมือนกัน (ด้านล่างใช้ใบขออนุญาตเป็นตัวอย่าง) · แบบคัดกรองต้องเติม `slots` เป็นช่วงเวลาที่เปิดจริงด้วย
+แต่ละ script สร้าง Google Form พร้อม Google Sheet เก็บคำตอบ ใน Drive ของคนที่กดรัน · วิธีใช้เหมือนกัน (ด้านล่างใช้ใบขออนุญาตเป็นตัวอย่าง) · แบบคัดกรองต้องเติม `slots` เป็นช่วงเวลาที่เปิดจริงด้วย · **ใช้ 1 Apps Script project ต่อ 1 ไฟล์** (ทุกไฟล์ประกาศ `CONFIG` ชื่อเดียวกัน ถ้าวางรวมใน project เดียวจะชนกัน)
 
 ## ขั้นตอน (~5 นาที)
 
