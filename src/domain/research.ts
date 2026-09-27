@@ -1,24 +1,36 @@
-import { addDays, dayOfWeek, todayLocal } from "./dates";
+import { diffDays, todayLocal } from "./dates";
 import type { AppState, LocalDate } from "./types";
 
 // "ส่งออกสำหรับงานวิจัย" — pilot data (06-experiment-plan.md) with nothing that identifies the person or their money.
-// Removed: names, notes, amounts, FX rates, account names, last-4 digits, colours, original ids, times of day.
-// Kept: kinds, categories, currencies, dates, account types, links between rows (via new ids), and how rows were made.
+// Removed: names, notes, amounts, FX rates, account names, last-4 digits, colours, original ids, times of day,
+//          real calendar dates (replaced by day numbers), the cycle start day, and the health category.
+// Kept: kinds, categories (health folded into other), currencies, day numbers, account types,
+//       links between rows (via new ids), and how rows were made.
+// See docs/13-pilot-consent-form.md (option A) — the consent text must match what this file contains.
 
-export const RESEARCH_FORMAT = "henngern-research-v1";
+export const RESEARCH_FORMAT = "henngern-research-v2";
 
+/** Categories that could reveal sensitive (health) information are exported as the generic expense category. */
+const SENSITIVE_CATEGORIES: Record<string, string> = { health: "other_out" };
+const safeCategory = (id: string | undefined) => (id ? (SENSITIVE_CATEGORIES[id] ?? id) : undefined);
+
+/**
+ * Day numbers replace dates: day 1 = the first day the participant saved something themselves.
+ * Days before that are ≤ 0. Weeks are rolling 7-day blocks from day 1 (week 1 = days 1–7).
+ */
 export interface ResearchExport {
   format: typeof RESEARCH_FORMAT;
-  exportedOn: LocalDate;
+  /** Day number of the export. */
+  exportedDay: number;
   isSample: boolean;
-  settings: { cycleStartDay: number; workScopeEnabled: boolean };
+  settings: { workScopeEnabled: boolean };
   accounts: { id: string; type: string; hidden: boolean }[];
   transactions: {
     id: string;
     kind: string;
     currency: string;
-    date: LocalDate;
-    loggedOn: LocalDate;
+    day: number;
+    loggedDay: number;
     categoryId?: string;
     accountId?: string;
     fromAccountId?: string;
@@ -26,7 +38,7 @@ export interface ResearchExport {
     scope: string;
     source: string;
     ruleId?: string;
-    occurrenceDate?: LocalDate;
+    occurrenceDay?: number;
     refundOfId?: string;
     editedAfterSave: boolean;
     deleted: boolean;
@@ -39,21 +51,21 @@ export interface ResearchExport {
     currency: string;
     categoryId: string;
     accountId?: string;
-    startsOn: LocalDate;
-    endsOn?: LocalDate;
+    startsDay: number;
+    endsDay?: number;
     maxOccurrences?: number;
     hadTrial: boolean;
     skippedCount: number;
-    createdOn: LocalDate;
+    createdDay: number;
     deleted: boolean;
     continuedAsId?: string;
     correctedFields?: string[];
   }[];
   summary: {
-    /** Distinct local days on which something was saved (sample rows excluded). */
+    /** Distinct days on which the participant saved something (sample rows excluded). */
     activeDays: number;
-    /** Monday-start week → active days that week. */
-    activeDaysByWeek: Record<LocalDate, number>;
+    /** Week number (1 = days 1–7 from the first own entry) → active days that week. */
+    activeDaysByWeek: Record<string, number>;
     confirmedCount: number;
     fromSentenceCount: number;
     /** Sentence entries saved without any correction. */
@@ -66,11 +78,9 @@ export interface ResearchExport {
   };
 }
 
-const weekStart = (d: LocalDate) => addDays(d, -((dayOfWeek(d) + 6) % 7));
-
 /**
  * Build the research export. `localDateOf` turns an ISO timestamp into the user's local date
- * (injectable for tests); only the date is kept, never the time.
+ * (injectable for tests); dates are only used to compute day numbers and never leave this function.
  */
 export function toResearchExport(
   state: AppState,
@@ -89,18 +99,26 @@ export function toResearchExport(
   state.rules.forEach((r) => alias("r", r.id));
   state.transactions.forEach((t) => alias("t", t.id));
 
+  // Summary counts only the user's own rows (sample rows are demo data).
+  const own = state.transactions.filter((t) => t.source !== "sample");
+  const ownRules = state.rules.filter((r) => r.note !== "ตัวอย่าง ไม่ใช่ยอดจริง");
+  const ownLogged = [...own.map((t) => localDateOf(t.createdAt)), ...ownRules.map((r) => localDateOf(r.createdAt))];
+  const allLogged = [...state.transactions.map((t) => localDateOf(t.createdAt)), ...state.rules.map((r) => localDateOf(r.createdAt))];
+  const anchor = [...(ownLogged.length ? ownLogged : allLogged.length ? allLogged : [opts.today])].sort()[0];
+  const dayOf = (d: LocalDate) => diffDays(anchor, d) + 1;
+
   const transactions = state.transactions.map((t) => ({
     id: alias("t", t.id)!,
     kind: t.kind,
     currency: t.currency,
-    date: t.date,
-    loggedOn: localDateOf(t.createdAt),
-    ...(t.categoryId ? { categoryId: t.categoryId } : {}),
+    day: dayOf(t.date),
+    loggedDay: dayOf(localDateOf(t.createdAt)),
+    ...(t.categoryId ? { categoryId: safeCategory(t.categoryId) } : {}),
     ...(t.accountId ? { accountId: alias("a", t.accountId) } : {}),
     ...(t.fromAccountId ? { fromAccountId: alias("a", t.fromAccountId), toAccountId: alias("a", t.toAccountId) } : {}),
     scope: t.scope,
     source: t.source,
-    ...(t.recurringRuleId ? { ruleId: alias("r", t.recurringRuleId), occurrenceDate: t.occurrenceDate } : {}),
+    ...(t.recurringRuleId ? { ruleId: alias("r", t.recurringRuleId), occurrenceDay: t.occurrenceDate ? dayOf(t.occurrenceDate) : undefined } : {}),
     ...(t.refundOfId ? { refundOfId: alias("t", t.refundOfId) } : {}),
     editedAfterSave: t.updatedAt !== t.createdAt && !t.deletedAt,
     deleted: Boolean(t.deletedAt),
@@ -112,25 +130,25 @@ export function toResearchExport(
     kind: r.kind,
     cadence: r.cadence,
     currency: r.currency,
-    categoryId: r.categoryId,
+    categoryId: safeCategory(r.categoryId)!,
     ...(r.accountId ? { accountId: alias("a", r.accountId) } : {}),
-    startsOn: r.startsOn,
-    ...(r.endsOn ? { endsOn: r.endsOn } : {}),
+    startsDay: dayOf(r.startsOn),
+    ...(r.endsOn ? { endsDay: dayOf(r.endsOn) } : {}),
     ...(r.maxOccurrences ? { maxOccurrences: r.maxOccurrences } : {}),
     hadTrial: Boolean(r.trialEndsOn),
     skippedCount: r.skippedDates?.length ?? 0,
-    createdOn: localDateOf(r.createdAt),
+    createdDay: dayOf(localDateOf(r.createdAt)),
     deleted: Boolean(r.deletedAt),
     ...(r.supersededBy ? { continuedAsId: alias("r", r.supersededBy) } : {}),
     ...(r.correctedFields ? { correctedFields: [...r.correctedFields] } : {}),
   }));
 
-  // Summary counts only the user's own rows (sample rows are demo data).
-  const own = state.transactions.filter((t) => t.source !== "sample");
-  const ownRules = state.rules.filter((r) => r.note !== "ตัวอย่าง ไม่ใช่ยอดจริง");
-  const days = new Set<LocalDate>([...own.map((t) => localDateOf(t.createdAt)), ...ownRules.map((r) => localDateOf(r.createdAt))]);
-  const byWeek: Record<LocalDate, number> = {};
-  for (const d of [...days].sort()) byWeek[weekStart(d)] = (byWeek[weekStart(d)] ?? 0) + 1;
+  const activeDayNumbers = [...new Set(ownLogged.map(dayOf))].sort((a, b) => a - b);
+  const byWeek: Record<string, number> = {};
+  for (const d of activeDayNumbers) {
+    const week = String(Math.floor((d - 1) / 7) + 1);
+    byWeek[week] = (byWeek[week] ?? 0) + 1;
+  }
   const sentenceRecords = [...own.filter((t) => t.source === "sentence"), ...ownRules.filter((r) => r.correctedFields !== undefined)];
   const correctionsByField: Record<string, number> = {};
   for (const rec of sentenceRecords) for (const f of rec.correctedFields ?? []) correctionsByField[f] = (correctionsByField[f] ?? 0) + 1;
@@ -138,14 +156,14 @@ export function toResearchExport(
 
   return {
     format: RESEARCH_FORMAT,
-    exportedOn: opts.today,
+    exportedDay: dayOf(opts.today),
     isSample: state.isSample,
-    settings: { cycleStartDay: state.settings.cycleStartDay, workScopeEnabled: state.settings.workScopeEnabled },
+    settings: { workScopeEnabled: state.settings.workScopeEnabled },
     accounts: state.accounts.map((a) => ({ id: alias("a", a.id)!, type: a.type, hidden: Boolean(a.hidden) })),
     transactions,
     rules,
     summary: {
-      activeDays: days.size,
+      activeDays: activeDayNumbers.length,
       activeDaysByWeek: byWeek,
       confirmedCount: live.length,
       fromSentenceCount: sentenceRecords.length,
@@ -157,4 +175,3 @@ export function toResearchExport(
     },
   };
 }
-
