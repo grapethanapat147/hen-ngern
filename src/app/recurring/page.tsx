@@ -2,6 +2,7 @@
 
 import { MoneyWithThb, Money } from "@/components/Money";
 import { StatusBadge } from "@/components/StatusBadge";
+import { CategoryIcon } from "@/components/CategoryIcon";
 import { useUi } from "@/components/ui/UiProvider";
 import { cycleFor, inCycle } from "@/domain/cycle";
 import { addDays, diffDays, formatThaiShort } from "@/domain/dates";
@@ -149,7 +150,8 @@ export default function RecurringPage() {
         {active.map((row) => (
           <li key={row.rule.id} data-rule={row.rule.name} className="flex flex-col gap-1.5 rounded-2xl border border-line bg-card p-4">
             <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
+              <CategoryIcon kind={row.rule.kind} categoryId={row.rule.categoryId} size="sm" />
+              <div className="min-w-0 flex-1">
                 <span className={`text-xs font-medium ${row.rule.kind === "income" ? "text-sage" : "text-muted"}`}>{row.rule.kind === "income" ? "เงินเข้า" : "เงินออก"}</span>
                 <button type="button" onClick={() => openRule(row.rule)} className="block min-h-11 truncate text-left font-semibold underline-offset-4 hover:underline">
                   {row.rule.name}
@@ -192,7 +194,9 @@ export default function RecurringPage() {
             <tbody className="divide-y divide-line">
               {active.map((row) => (
                 <tr key={row.rule.id} data-rule={row.rule.name} className="align-top">
-                  <td className="px-3 py-3">
+                  <td className="flex gap-2 px-3 py-3">
+                    <CategoryIcon kind={row.rule.kind} categoryId={row.rule.categoryId} size="sm" />
+                    <div className="min-w-0">
                     <span className={`block text-xs ${row.rule.kind === "income" ? "text-sage" : "text-muted"}`}>{row.rule.kind === "income" ? "เงินเข้า" : "เงินออก"}</span>
                     <button type="button" onClick={() => openRule(row.rule)} className="text-left font-semibold underline-offset-4 hover:underline">
                       {row.rule.name}
@@ -200,6 +204,7 @@ export default function RecurringPage() {
                     </button>
                     <div>
                       {paid(row)}
+                    </div>
                     </div>
                   </td>
                   <td className="px-3 py-3 whitespace-nowrap">{cadenceText(row.rule)}</td>
