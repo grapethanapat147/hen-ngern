@@ -29,7 +29,7 @@ test("ส่งออกสำหรับงานวิจัย: no names or 
   const text = readFileSync((await download.path())!, "utf8");
   for (const secret of ["แท็กซี่", "สมศรี", "กาแฟ", "220", "22000", "6500", "เงินสด", "amountMinor"]) expect(text, secret).not.toContain(secret);
   const data = JSON.parse(text);
-  expect(data.format).toBe("henngern-research-v1");
+  expect(data.format).toBe("henngern-research-v2");
   expect(data.summary).toMatchObject({ confirmedCount: 2, fromSentenceCount: 2, sentenceUncorrectedCount: 1, correctionsByField: { category: 1 } });
   expect(data.transactions.map((t: { correctedFields: string[] }) => t.correctedFields)).toEqual([["category"], []]);
 });

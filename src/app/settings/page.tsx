@@ -291,10 +291,10 @@ export default function SettingsPage() {
                   <div role="group" aria-label="ส่งออกสำหรับงานวิจัย" data-testid="research-panel" className="flex flex-col gap-2 rounded-xl bg-teal-soft p-3 text-sm">
                     <p className="font-semibold">ไฟล์สำหรับส่งให้ทีมวิจัย (เฉพาะคนที่ยินยอม)</p>
                     <p>
-                      <span className="font-medium">ไม่มี:</span> ชื่อรายการ · หมายเหตุ · ยอดเงิน · เรท · ชื่อบัญชี · 4 ตัวท้าย · เวลาที่จด
+                      <span className="font-medium">ไม่มี:</span> ชื่อรายการ · หมายเหตุ · ยอดเงิน · เรท · ชื่อบัญชี · 4 ตัวท้าย · วันที่จริงและเวลา
                     </p>
                     <p>
-                      <span className="font-medium">มี:</span> ชนิด · หมวด · วันที่ · สกุลเงิน · ประเภทบัญชี · วันที่จด · ช่องที่ต้องแก้จากร่าง
+                      <span className="font-medium">มี:</span> ชนิด · หมวด (สุขภาพรวมอยู่ใน อื่น ๆ) · ลำดับวันนับจากวันแรกที่จด · สกุลเงิน · ประเภทบัญชี · ช่องที่ต้องแก้จากร่าง
                     </p>
                     <p className="text-muted">
                       รายการที่คุณจดเอง {research.summary.confirmedCount} รายการ · จด {research.summary.activeDays} วัน
