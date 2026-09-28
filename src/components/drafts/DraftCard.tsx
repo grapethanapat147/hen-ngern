@@ -9,6 +9,7 @@ import type { UncertainField } from "@/domain/parser";
 import type { AppState, Cadence, Currency, TxKind } from "@/domain/types";
 import { CADENCE_LABEL, KIND_LABEL, QUESTIONS } from "@/lib/copy";
 import { answerQuestion, changeKind, editDraft, type EditableDraft } from "@/lib/drafts";
+import { CategoryIcon } from "../CategoryIcon";
 import { MoneyWithThb } from "../Money";
 
 interface Props {
@@ -72,7 +73,8 @@ export function DraftCard({ draft: d, index, total, state, today, issues, mode =
   return (
     <section aria-labelledby={id("title")} className="flex flex-col gap-3 rounded-2xl border border-line bg-paper/60 p-3">
       <div className="flex items-center justify-between">
-        <h3 id={id("title")} className="font-semibold">
+        <h3 id={id("title")} className="flex items-center gap-2 font-semibold">
+          {d.kind && <CategoryIcon kind={d.kind} categoryId={d.categoryId} size="sm" />}
           {mode === "edit" ? "รายการ" : total > 1 ? `ร่าง ${index + 1} จาก ${total}` : "ร่าง"}
         </h3>
         {onRemove && (
