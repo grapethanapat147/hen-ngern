@@ -8,6 +8,7 @@ import type { Occurrence, TrialInfo } from "@/domain/recurrence";
 import type { SideIncomeProgress } from "@/domain/totals";
 import type { Account, Settings } from "@/domain/types";
 import { TRIAL_HINT } from "@/lib/copy";
+import { CategoryIcon } from "../CategoryIcon";
 import { Money, MoneyWithThb } from "../Money";
 import { StatusBadge } from "../StatusBadge";
 
@@ -98,6 +99,7 @@ export function OccurrenceList({
         const when = days === 0 ? "วันนี้" : days > 0 ? `อีก ${days} วัน` : `เลยมา ${-days} วัน`;
         return (
           <li key={`${o.ruleId}-${o.date}`} className="flex items-center gap-3 px-4 py-3">
+            <CategoryIcon kind={o.kind} categoryId={o.categoryId} />
             <div className="min-w-0 flex-1">
               <p className="truncate font-medium">
                 <span className="sr-only">{o.kind === "income" ? "เงินเข้า " : "เงินออก "}</span>

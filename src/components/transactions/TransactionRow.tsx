@@ -3,15 +3,10 @@ import { actualVsExpectedDiffMinor } from "@/domain/matching";
 import { formatMoney, formatSignedThb, txThbMinor } from "@/domain/money";
 import type { Account, AppState, Transaction } from "@/domain/types";
 import { KIND_LABEL } from "@/lib/copy";
+import { CategoryIcon } from "../CategoryIcon";
 import { spokenMoney } from "../Money";
 
 const accountLabel = (a: Account | undefined) => (a ? `${a.name}${a.last4 ? ` ••${a.last4}` : ""}` : "ไม่ระบุบัญชี");
-
-/** First readable syllable of a Thai word: a leading vowel (เ แ โ ใ ไ) needs the next cluster too. Placeholder until an icon set (T8). */
-function glyph(word: string): string {
-  const clusters = [...new Intl.Segmenter("th", { granularity: "grapheme" }).segment(word)].map((g) => g.segment);
-  return /^[เแโใไ]$/.test(clusters[0] ?? "") ? clusters.slice(0, 2).join("") : (clusters[0] ?? "");
-}
 
 const SIGN = { income: "+", refund: "+", expense: "−", transfer: "⇄" } as const;
 const TONE = { income: "text-sage", refund: "text-sage", expense: "text-ink", transfer: "text-muted" } as const;
@@ -27,9 +22,7 @@ export function TransactionRow({ tx, state, onOpen }: { tx: Transaction; state: 
 
   return (
     <button type="button" onClick={onOpen} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-paper/60">
-      <span aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-teal-soft text-sm font-semibold text-teal">
-        {tx.kind === "transfer" ? "⇄" : glyph(categoryName(tx.categoryId))}
-      </span>
+      <CategoryIcon kind={tx.kind} categoryId={tx.categoryId} />
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-1.5">
           <span className="truncate font-medium">{tx.name}</span>
